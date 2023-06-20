@@ -129,6 +129,7 @@ plt.show()
 
 A_ = lap_arr[:,-1]
 A_ = np.reshape(A_, (len(A_),1))
+
 b_ = -np.matmul( lap_arr[:,:-1], aprxs[:-1])
 b_ = np.reshape(b_, (len(b_),1))
 
@@ -139,4 +140,32 @@ y = np.linalg.lstsq(A_,b_ )
 #idk why it isn't giving back a singular value, but the first one is a reasonable approximation
 
 spline_aprx_ = y[0]
+
+
+
+
+
+#%%
+
+#predicting the last two based on the others
+
+
+A_ = lap_arr[:,(-2,-1)]
+A_ = np.reshape(A_, (len(A_),2))
+
+b_ = -np.matmul( lap_arr[:,:-2], aprxs[:-2])
+b_ = np.reshape(b_, (len(b_),1))
+
+
+y = np.linalg.lstsq(A_,b_ )
+
+# i really don't know what is happening here. I thought i did, but idk. 
+#idk why it isn't giving back a singular value, but the first one is a reasonable approximation
+
+spline_aprx_ = y[0]
+
+
+
+
+
 
