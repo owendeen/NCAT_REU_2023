@@ -11,7 +11,7 @@ import networkx as nx
 
 
 #%%     generate positive definite matrix
-A = generate_positive_definite_matrix(5)
+A = generate_positive_definite_matrix(20)
 m,n = np.shape(A)
 
 
@@ -65,12 +65,19 @@ ALL adjacent patterns but idk if we want them to be a linear graph or something 
 
 
 #%%     collect the index pairs of dicts that are subsets of another by knowing pattern
+"""
 list_of_adjacents = []
 nuu =1
 for k in reversed(range(1,len(ss))):
     for kk in range(len(ss)-nuu):
         list_of_adjacents.append((k,kk))
     nuu+=1
+"""
+
+list_of_adjacents = []
+
+for k in reversed(range(1,len(ss))):
+    list_of_adjacents.append((k,k-1))
 
 
 #%%     make empty adjacency matrix
@@ -83,10 +90,11 @@ adjacency_arr = np.zeros((n,n))
 
 for k in range(len(list_of_adjacents)):
     lef, rig = list_of_adjacents[k]
-    weightt  = 1/ (entries_in_patterns[lef] - entries_in_patterns[rig])
+    weightt  = 1/( (entries_in_patterns[lef] - entries_in_patterns[rig]) )
     #weight is 1\distance with distance being difference in number of entries. we can
     #normalize the distance by dividing it by n or (n/2) or something
     adjacency_arr[lef,rig] = weightt
+    adjacency_arr[rig,lef] = weightt
 
 
 
@@ -100,7 +108,7 @@ lap_arr = laplacian(adjacency_arr)
 round_adj_arr = np.around(adjacency_arr,decimals=3)
 
 
-graph_arr = nx.from_numpy_array(round_adj_arr, create_using=nx.DiGraph)
+graph_arr = nx.from_numpy_array(round_adj_arr, create_using=nx.Graph)
 #not sure if we want digraph or not
 layout = nx.circular_layout(graph_arr)
 #can use different layouts
@@ -110,12 +118,25 @@ nx.draw_networkx_edge_labels(graph_arr, pos=layout, edge_labels=labels)
 plt.show()
 
 
-#%%
+#%% minimize the spline
+
+#the full sparsity pattern gives the actual answer, so we are going to try and use
+#all but the last (full) sparsity pattern
+
+#going to minimize || Laplacian * [apprxs] ||^(2)_(2)
+#to do so going to minimize (last col of lapl)*(approx we want) = -(other cols of lapl)*(other approxs)
+#                                   A                   x        =                     b
+
+A_ = lap_arr[:,-1]
+A_ = np.reshape(A_, (len(A_),1))
+b_ = -np.matmul( lap_arr[:,:-1], aprxs[:-1])
+b_ = np.reshape(b_, (len(b_),1))
 
 
+y = np.linalg.lstsq(A_,b_ )
 
+# i really don't know what is happening here. I thought i did, but idk. 
+#idk why it isn't giving back a singular value, but the first one is a reasonable approximation
 
-#$$     minimize?????
-
-
+spline_aprx_ = y[0]
 
