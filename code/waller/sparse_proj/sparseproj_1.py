@@ -13,7 +13,7 @@ import matplotlib.pyplot as plt
 from scipy.sparse.csgraph import laplacian
 
 #%% Matrix generation and pre-stuff
-dim_enter = 20
+dim_enter = 4
 A = laplacian_grid(dim_enter)       #generate input^2 x input^2 matrix
 m,n = A.get_shape()
 orders_of_A = 4             #power of A to go to
@@ -41,11 +41,12 @@ for k in range(orders_of_A):
     dict_pttns.append( find_sprs_pttn( pttns_nondense[k] ) )
 
 
-
+testing123 = []
 aprxs = []
 for dictt in dict_pttns:
     Ghat , G, dGhat = sparse_apprx_inv(A, dictt)
     aprxs.append(dGhat)
+    testing123.append(Ghat)
 
 
 

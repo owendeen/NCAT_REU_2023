@@ -12,7 +12,7 @@ import networkx as nx
 import matplotlib.pyplot as plt
 from scipy.sparse.csgraph import laplacian
 import scipy as sp
-
+from gehat_ge_dghat_old import sparse_apprx_inv
 
 
 
@@ -39,17 +39,73 @@ for k in range(orders_of_A):
 
 
 inputt = sprs_ptts[0]
-
 pattern = sp.sparse.tril(inputt, format='csr')
+base = sp.sparse.csr_array((n,n))
+#Ghat_El = base.copy()
 
-A_i = 
-
-
-
-
-
+#pattern= sparsity pattern    A=array to be sliced    
+#for slicing, im not sure if I should switch back and forth between csr and csc formats for higher speed
 
 
+for i in range(n): #i is the row we work with in A
+    nonzero_cols = pattern.indices[pattern.indptr[i]:pattern.indptr[i+1]] #in row i, col number of nonzeros
+    
+    first_projection = sp.sparse.linalg.inv( (A[ nonzero_cols ,:])[:,nonzero_cols]  )  #slice according to projection then inverse then slice then slice
+    
+    second_projection = sp.sparse.csr_array((n,len(nonzero_cols)))
+    second_projection[ nonzero_cols , 0:len(nonzero_cols) ]   =  first_projection 
+    
+    third_projection = base.copy()
+    third_projection[ : , nonzero_cols ] = second_projection
+    
+    fourth_projection = sp.sparse.csr_array.transpose(third_projection[:,[i]]).tocsr()   #the e_i projection
+    
+    if i == 0:
+        Ghat_El = (fourth_projection.copy())
+        print(i)
+    else:
+        Ghat_El = sp.sparse.vstack([Ghat_El, (fourth_projection.copy())])
+        print(i)
+    
+    
+#working script for making Ghat's from the boolean A1, A2, etc.. 
+#now to perform the math on the Ghat_El to find the apprx
+
+#try the big PI method
+
+diagonals = sp.sparse.csr_matrix.diagonal(Ghat_El) **(-1/n)
+apprx = np.prod(diagonals)
+
+
+
+
+#%% compare
+
+
+
+
+
+
+#%% testing
+test = pattern.indices[pattern.indptr[10]:pattern.indptr[10+1]]
+first_projection = sp.sparse.linalg.inv( ((A[ test ,:])[:,test] ) )
+
+second_projection = sp.sparse.csr_array((n,len(test)))
+second_projection[ test , 0:len(test) ]   =  first_projection        #maybe convert to lil_matrix to change structure
+
+third_projection = sp.sparse.csr_array((n,n))
+third_projection[ : , test ] = second_projection
+
+fourth_projection = sp.sparse.csr_array.transpose(third_projection[:,[10]]).tocsr()
+Ghat_El = fourth_projection.copy()
+test2222 = sp.sparse.vstack([Ghat_El,fourth_projection])
+
+test222 = A1.getrow(1)
+
+
+
+
+maybe = Ghat_El.todense()
 
 
 
