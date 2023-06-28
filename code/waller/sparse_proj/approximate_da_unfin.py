@@ -1,18 +1,15 @@
 # -*- coding: utf-8 -*-
 """
-new file to calculate G and do the approx stuff
+new file to calculate G and do the approx stuff. NOT a function. Function 
+is on the other file
 """
 #%%this is here just to generate the matrices to work with. will be deleted at end when made function
 from generate_matrices import laplacian_grid, florida_sparse
-from gehat_ge_dghat_old import sparse_apprx_inv
-from find_sparsity_pattern_func_old import find_sprs_pttn
+
 import numpy as np
 import scipy as sp
-import networkx as nx
-import matplotlib.pyplot as plt
-from scipy.sparse.csgraph import laplacian
-import scipy as sp
-from gehat_ge_dghat_old import sparse_apprx_inv
+from scipy.sparse import csr_matrix
+from scipy.sparse import linalg
 
 
 
@@ -38,7 +35,7 @@ for k in range(orders_of_A):
 #%% input are the boolean arrays of where values are
 
 
-inputt = sprs_ptts[0]
+inputt = sprs_ptts[3]
 pattern = sp.sparse.tril(inputt, format='csr')
 base = sp.sparse.csr_array((n,n))
 #Ghat_El = base.copy()
@@ -62,10 +59,8 @@ for i in range(n): #i is the row we work with in A
     
     if i == 0:
         Ghat_El = (fourth_projection.copy())
-        print(i)
     else:
         Ghat_El = sp.sparse.vstack([Ghat_El, (fourth_projection.copy())])
-        print(i)
     
     
 #working script for making Ghat's from the boolean A1, A2, etc.. 
@@ -73,7 +68,7 @@ for i in range(n): #i is the row we work with in A
 
 #try the big PI method
 
-diagonals = sp.sparse.csr_matrix.diagonal(Ghat_El) **(-1/n)
+diagonals = sp.sparse.csr_matrix.diagonal(Ghat_El.tocsr()) **(-1/n)
 apprx = np.prod(diagonals)
 
 
@@ -99,7 +94,7 @@ third_projection[ : , test ] = second_projection
 fourth_projection = sp.sparse.csr_array.transpose(third_projection[:,[10]]).tocsr()
 Ghat_El = fourth_projection.copy()
 test2222 = sp.sparse.vstack([Ghat_El,fourth_projection])
-
+testzz = test2222.tocsr()
 test222 = A1.getrow(1)
 
 

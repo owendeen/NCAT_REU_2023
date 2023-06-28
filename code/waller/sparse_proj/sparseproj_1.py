@@ -6,11 +6,13 @@ this will be the MAIN FILE
 from generate_matrices import laplacian_grid, florida_sparse
 from gehat_ge_dghat_old import sparse_apprx_inv
 from find_sparsity_pattern_func_old import find_sprs_pttn
+from dA_apprx_sparse1 import our_csr_apprx
 import numpy as np
 import scipy as sp
 import networkx as nx
 import matplotlib.pyplot as plt
 from scipy.sparse.csgraph import laplacian
+
 
 #%% Matrix generation and pre-stuff
 dim_enter = 4
@@ -41,14 +43,26 @@ for k in range(orders_of_A):
     dict_pttns.append( find_sprs_pttn( pttns_nondense[k] ) )
 
 
-testing123 = []
+testingold = []
 aprxs = []
 for dictt in dict_pttns:
     Ghat , G, dGhat = sparse_apprx_inv(A, dictt)
     aprxs.append(dGhat)
-    testing123.append(Ghat)
+    testingold.append(Ghat)
 
 
+
+#%% compare new calculation with old
+
+testingnew = []
+aprxsnew = []
+for s in sprs_ptts:
+    d_A , Ghat_El = our_csr_apprx(A, s)
+    aprxsnew.append(d_A)
+    testingnew.append(Ghat_El)
+
+for k in range(len(testingnew)):
+    testingnew[k] = testingnew[k].todense()
 
 #%% connectedness and adjacency
 
