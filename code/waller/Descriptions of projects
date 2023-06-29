@@ -2,7 +2,7 @@ microproj_1 is the first attempt at the code using the dictionary and original G
 
 Sparse projs 1 and 2 use the csr formats in their code. They have the same general layout as the microproj. They use a new code to calculate Ghat and the d(A) approximation.
     Sparse proj 2 is very similar to 1, but it's cleaned up and direct. sparse proj 1 has a slew of code used for testing and comparing stuff and its folder has some files
-    not used in the main file. 
+    not used in the main file. It also introduces the laplacian_grid function and more.
   Hopefully sparse proj2 and on will all be zip files
 
 Sparse proj 3 is a work in progress and hopefully will introduce some sparsity patterns "in-between" A1 and A2, A2 and A3, and etc. and etc..
