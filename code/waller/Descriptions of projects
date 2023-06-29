@@ -1,4 +1,4 @@
-all of the misc files floating around this folder are "microproj1". They are the first attempt at the code using the dictionary and original Ghat function.
+microproj_1 is the first attempt at the code using the dictionary and original Ghat function.
 
 Sparse projs 1 and 2 use the csr formats in their code. They have the same general layout as the microproj. They use a new code to calculate Ghat and the d(A) approximation.
     Sparse proj 2 is very similar to 1, but it's cleaned up and direct. sparse proj 1 has a slew of code used for testing and comparing stuff and its folder has some files
