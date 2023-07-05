@@ -5,11 +5,29 @@ Sparse projs 1 and 2 use the csr formats in their code. They have the same gener
     not used in the main file. It also introduces the laplacian_grid function and more.
   Hopefully sparse proj2 and on will all be zip files
 
-Sparse proj 3 is a work in progress and hopefully will introduce some sparsity patterns "in-between" A1 and A2, A2 and A3, and etc. and etc..
+Sparse proj 3 was a work in progress and hopefully will introduce some sparsity patterns "in-between" A1 and A2, A2 and A3, and etc. and etc..
     sparseproj_3 has a functioning prototype (emphasis on the proto) of a construction of an "in-between" of two sparsity patterns
         it's in the file: approximate_da_unfin2.py . You have to do alot of it manually. But given the Ghat of a pattern, it removes
         particular small values from the Ghat, and makes a new sparsity pattern from that which is inbetween Ak and A(k-1).
         this new sparsity pattern can be ran through the approximation part above it to give a new estimate!!!!
 
+Sparse proj 4 has the inbetweens completed in a function format
+
+wholeproj_1 will have all the functions partitioned out (and the entire project will be functional) and commented on so that the whole proj
+    can be optimized and worked on further. Using an inbetween of sps pat A2, we'll square it and remove smsllest values and use that 
+    process to make apxs. In this, or the next project, the efficiency will be addressed.
+
     new objective is to add that code to the actual function. after that, a sparse_proj4 will probably be started with lots
     of emphasis on making things FAST. If we only calculate things out to A2 sparsity pattern, they should be pretty quick
+
+
+
+
+
+
+
+
+
+
+
+
